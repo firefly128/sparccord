@@ -7,7 +7,7 @@
 # Produces: sparccord-0.1-sparc.pkg
 
 PKGNAME="JWsprccrd"
-VERSION="0.1"
+VERSION="1.0"
 BASEDIR="/opt/sparccord"
 SRCDIR=`pwd`
 BUILDDIR="/tmp/sparccord-build"

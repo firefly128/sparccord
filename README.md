@@ -33,9 +33,14 @@ a classic 3-pane layout (channels | messages | members).
 
 ## Quick Start
 
-### 1. Start the bridge (on your Docker host)
+### 1. Set up the bridge FIRST (on your Docker host)
+
+> **You must have the bridge running before SPARCcord can connect.**
+> The bridge is a separate component that runs on modern hardware with Docker.
+> See [discord-bridge](https://github.com/firefly128/discord-bridge).
 
 ```bash
+git clone https://github.com/firefly128/discord-bridge
 cd discord-bridge
 cp .env.example .env
 # Edit .env and add your Discord token
@@ -48,7 +53,20 @@ docker compose logs -f
 The bridge listens on port 3002. It launches Chromium, injects your token,
 navigates to Discord, and begins intercepting Gateway events via CDP.
 
-### 2. Build the client (on Solaris 7)
+### 2. Install the client (on Solaris 7)
+
+**Option A: Install from package (recommended)**
+
+Download the latest `.pkg` from
+[Releases](https://github.com/firefly128/sparccord/releases):
+
+```bash
+pkgadd -d sparccord-1.0-sparc.pkg
+```
+
+Installs to `/opt/sparccord/bin/sparccord`.
+
+**Option B: Build from source**
 
 ```bash
 cd sparccord
@@ -110,8 +128,8 @@ On the Solaris 7 system:
 
 ```bash
 sh build-pkg.sh
-# Produces: sparccord-0.1-sparc.pkg
-pkgadd -d sparccord-0.1-sparc.pkg
+# Produces: sparccord-1.0-sparc.pkg
+pkgadd -d sparccord-1.0-sparc.pkg
 ```
 
 Installs to `/opt/sparccord/bin/sparccord`.

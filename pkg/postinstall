@@ -9,12 +9,13 @@ HOME_DIR=`grep "^root:" /etc/passwd | cut -d: -f6`
 if [ -n "${HOME_DIR}" ] && [ ! -f "${HOME_DIR}/.sparccordrc" ]; then
     cat > "${HOME_DIR}/.sparccordrc" <<EOF
 # SPARCcord configuration
-# Bridge server address (use QEMU SLiRP gateway to reach host)
+# Bridge server address — set this to the IP of your Docker host
+# If using QEMU SLiRP, the gateway is 10.0.2.2
 server=10.0.2.2
 port=3002
 # Polling interval in milliseconds
 poll_ms=2000
-# Image settings
+# Image settings (for 8-bit displays)
 image_colors=16
 image_maxwidth=320
 EOF
@@ -22,9 +23,25 @@ EOF
 fi
 
 echo ""
-echo "SPARCcord installed to /opt/sparccord"
-echo "Run with: /opt/sparccord/bin/sparccord"
-echo "Config:   ~/.sparccordrc"
+echo "============================================================"
+echo "  SPARCcord installed to /opt/sparccord"
+echo "============================================================"
 echo ""
-echo "Make sure discord-bridge is running on the host:"
-echo "  cd discord-bridge && docker compose up -d"
+echo "  IMPORTANT: SPARCcord requires the discord-bridge container"
+echo "  running on a Docker host BEFORE you can use this client."
+echo ""
+echo "  Bridge setup (on your Docker host, NOT on this machine):"
+echo ""
+echo "    git clone https://github.com/firefly128/discord-bridge"
+echo "    cd discord-bridge"
+echo "    cp .env.example .env"
+echo "    # Edit .env and add your Discord token"
+echo "    docker compose up -d"
+echo ""
+echo "  Then edit ~/.sparccordrc on this machine and set 'server'"
+echo "  to the IP address of your Docker host."
+echo ""
+echo "  Run SPARCcord:  /opt/sparccord/bin/sparccord"
+echo "  Configuration:  ~/.sparccordrc"
+echo "============================================================"
+echo ""

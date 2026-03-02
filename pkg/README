@@ -1,0 +1,63 @@
+SPARCcord - Discord Client for Solaris 7 SPARC
+===============================================
+
+SPARCcord is a native Motif/CDE Discord client for SPARCstation systems.
+It talks to a headless Chrome bridge server that handles the modern
+Discord gateway protocol on your behalf.
+
+IMPORTANT: TWO-COMPONENT SETUP
+-------------------------------
+
+SPARCcord requires TWO components to work:
+
+  1. discord-bridge  (runs on a modern Docker host — set this up FIRST)
+  2. sparccord       (runs on your Solaris 7 SPARC machine — this package)
+
+The bridge handles Discord's HTTPS/WebSocket protocols using headless
+Chromium, and exposes a simple HTTP/1.0 API that the SPARC client polls.
+
+STEP 1: Set up discord-bridge (on your Docker host)
+----------------------------------------------------
+
+  git clone https://github.com/firefly128/discord-bridge
+  cd discord-bridge
+  cp .env.example .env
+  vi .env                     # Add your Discord token
+  docker compose up -d
+  docker compose logs -f      # Verify it connects
+
+The bridge listens on port 3002.
+
+STEP 2: Install SPARCcord (on Solaris 7)
+-----------------------------------------
+
+  pkgadd -d sparccord-1.0-sparc.pkg
+
+STEP 3: Configure
+------------------
+
+Edit ~/.sparccordrc and set the 'server' line to the IP of your Docker
+host. If using QEMU SLiRP networking, the default 10.0.2.2 should work.
+
+  server=10.0.2.2
+  port=3002
+
+STEP 4: Run
+-----------
+
+  DISPLAY=:0 /opt/sparccord/bin/sparccord
+
+Or if /usr/local/bin is in your PATH:
+
+  sparccord
+
+Requirements
+------------
+
+  - Solaris 7 SPARC (SunOS 5.7)
+  - CDE (SUNWdtbas) for Motif libraries
+  - X11 (SUNWxwplt) for display
+  - Network connectivity to the Docker host running discord-bridge
+
+Project home: https://github.com/firefly128/sparccord
+Bridge:       https://github.com/firefly128/discord-bridge

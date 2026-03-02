@@ -1,0 +1,30 @@
+#!/bin/sh
+# Post-install: create symlink in /usr/local/bin if it exists
+if [ -d /usr/local/bin ]; then
+    ln -sf /opt/sparccord/bin/sparccord /usr/local/bin/sparccord
+fi
+
+# Create default config if it doesn't exist
+HOME_DIR=`grep "^root:" /etc/passwd | cut -d: -f6`
+if [ -n "${HOME_DIR}" ] && [ ! -f "${HOME_DIR}/.sparccordrc" ]; then
+    cat > "${HOME_DIR}/.sparccordrc" <<EOF
+# SPARCcord configuration
+# Bridge server address (use QEMU SLiRP gateway to reach host)
+server=10.0.2.2
+port=3002
+# Polling interval in milliseconds
+poll_ms=2000
+# Image settings
+image_colors=16
+image_maxwidth=320
+EOF
+    echo "Created ${HOME_DIR}/.sparccordrc"
+fi
+
+echo ""
+echo "SPARCcord installed to /opt/sparccord"
+echo "Run with: /opt/sparccord/bin/sparccord"
+echo "Config:   ~/.sparccordrc"
+echo ""
+echo "Make sure discord-bridge is running on the host:"
+echo "  cd discord-bridge && docker compose up -d"

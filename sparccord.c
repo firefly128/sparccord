@@ -49,6 +49,7 @@
 #include "http.h"
 #include "json.h"
 #include "gifload.h"
+#include "icon48.h"
 
 /* Forward declarations */
 static void truncate_name(char *buf, int maxlen);
@@ -2016,6 +2017,17 @@ int main(int argc, char *argv[])
 
     /* Realize and show */
     XtRealizeWidget(top_shell);
+
+    /* Set window icon */
+    {
+        Display *dpy = XtDisplay(top_shell);
+        Window win = XtWindow(top_shell);
+        Pixmap icon_pm = XCreateBitmapFromData(dpy, win,
+            (char *)icon48_bits, icon48_width, icon48_height);
+        if (icon_pm != None) {
+            XtVaSetValues(top_shell, XmNiconPixmap, icon_pm, NULL);
+        }
+    }
 
     /* Start connection check (will trigger guild fetch + polling) */
     XtAppAddTimeOut(app_context, 500, check_connection, NULL);

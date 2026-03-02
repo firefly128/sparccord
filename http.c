@@ -8,6 +8,7 @@
 #include "http.h"
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -30,6 +31,15 @@ static int tcp_connect(const char *host, int port)
 
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) return -1;
+
+    /* Set socket timeouts to prevent hangs on slow/dead connections */
+    {
+        struct timeval tv;
+        tv.tv_sec = 8;
+        tv.tv_usec = 0;
+        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));
+        setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(tv));
+    }
 
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
